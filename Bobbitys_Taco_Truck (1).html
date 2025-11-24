@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bobbity's Taco Truck</title>
+<style>
+  body {margin:0;font-family:Arial,sans-serif;background:#fafafa;color:#222;}
+  header {background:#ff6b35;color:white;padding:20px;text-align:center;}
+  .container {max-width:900px;margin:auto;padding:20px;}
+  .section {background:white;padding:20px;margin-bottom:20px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,0.1);}
+  h2 {margin-top:0;}
+  .menu-item {display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee;}
+  footer {text-align:center;padding:10px;font-size:14px;color:#666;}
+  button {padding:10px 15px;margin:10px 5px 10px 0;}
+</style>
+</head>
+<body>
+<header contenteditable="true">Bobbity's Taco Fiesta</header>
+
+<div class="container">
+  <div class="section" id="about" contenteditable="true">
+    <h2>About Us</h2>
+    <p>Welcome to Bobbity's Taco Fiesta! The premium of all tacos!</p><p>Find the following links for relating information:</p>
+  </div>
+
+  <div class="section" id="menu" contenteditable="true">
+    <h2>Menu</h2>
+    <div class="menu-item"><span>Bobbity's classic taco</span><span>$5</span></div>
+    <div class="menu-item"><span>Bobbity's hot taco</span><span>$6</span></div>
+    <div class="menu-item"><span>Big taco</span><span>$5</span></div>
+    <div class="menu-item"><span>Big Back special taco</span><span>$6</span></div>
+    <div class="menu-item"><span>Vegan taco</span><span>$6</span></div>
+    <div class="menu-item"><span>Burrito Taco</span><span>$6</span></div>
+    <div class="menu-item"><span>Digital Taco</span><span>$7</span></div>
+    <div class="menu-item"><span>Salty Taco</span><span>$7</span></div>
+    <div class="menu-item"><span>Sentient Taco</span><span>$7</span></div>
+    <div class="menu-item"><span>Build your own Taco</span><span>$7</span></div>
+    <div class="menu-item"><span>Sweetened Taco</span><span>$7</span></div>
+    <div class="menu-item"><span>Small Taco</span><span>$7</span></div>
+    <div class="menu-item"><span>Taco Roll</span><span>$5</span></div>
+    <div class="menu-item"><span>Cheesy-ahh Taco</span><span>$4</span></div>
+    <div class="menu-item"><span>Fries Taco</span><span>$5</span></div>
+    <div class="menu-item"><span>Rice Taco</span><span>$5</span></div>
+    <div class="menu-item"><span>German sausage Taco</span><span>$7</span></div>
+    <div class="menu-item"><span>Marshmallow sundae</span><span>$6</span></div>
+    <div class="menu-item"><span>Fries</span><span>$5</span></div>
+    <div class="menu-item"><span>Chicken nugget</span><span>$5</span></div>
+    <div class="menu-item"><span>Bobbity's classic combo</span><span>$8</span></div>
+    <div class="menu-item"><span>Bobbity's American combo</span><span>$6</span></div>
+    <div class="menu-item"><span>Fat people's desire meal</span><span>$7</span></div>
+    <div class="menu-item"><span>Bobbity's hot combo</span><span>$5</span></div>
+    <div class="menu-item"><span>Bobbity's chinese combo</span><span>$6</span></div>
+    <div class="menu-item"><span>Bobbity's Japan combo</span><span>$5</span></div>
+    <div class="menu-item"><span>Bobbity's fancy dinner</span><span>$6</span></div>
+    <div class="menu-item"><span>Bobbity's desert combo</span><span>$6</span></div>
+    <div class="menu-item"><span>Fanta</span><span>$2</span></div>
+  </div>
+
+  <div class="section" id="location" contenteditable="true">
+    <h2>Find Us</h2>
+    <p>Now available in the Coles parking lot, Pinewood Shopping Village, Mount Waverly, 3149</p>
+  </div>
+
+  <button id="saveBtn">Save &amp; Copy Link</button>
+  <button id="downloadBtn">Download Page</button>
+</div>
+
+<footer contenteditable="true">© 2025 Bobbity's Taco Fiesta</footer>
+
+<script>
+  function loadContent() {
+    const params = new URLSearchParams(window.location.search);
+    ['about','menu','location','header','footer'].forEach(id => {
+      const el = document.getElementById(id) || document.querySelector(id==='header'? 'header':'footer');
+      if(params.get(id)) el.innerHTML = decodeURIComponent(params.get(id));
+      else if(localStorage.getItem(id)) el.innerHTML = localStorage.getItem(id);
+    });
+  }
+
+  document.getElementById('saveBtn').addEventListener('click', () => {
+    ['about','menu','location','header','footer'].forEach(id => {
+      const el = document.getElementById(id) || document.querySelector(id==='header'? 'header':'footer');
+      localStorage.setItem(id, el.innerHTML);
+    });
+    const url = new URL(window.location);
+    ['about','menu','location','header','footer'].forEach(id => {
+      const el = document.getElementById(id) || document.querySelector(id==='header'? 'header':'footer');
+      url.searchParams.set(id, encodeURIComponent(el.innerHTML));
+    });
+    navigator.clipboard.writeText(url.toString());
+    alert("Link copied! Share it with anyone to show your page.");
+  });
+
+  document.getElementById('downloadBtn').addEventListener('click', () => {
+    const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    const blob = new Blob([htmlContent], {type: 'text/html'});
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'Bobbitys_Taco_Truck.html';
+    link.click();
+  });
+
+  loadContent();
+</script>
+
+
+</body></html>
