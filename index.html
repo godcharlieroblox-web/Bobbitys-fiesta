@@ -279,7 +279,29 @@ function downloadPage() {
   a.click();
 }
 </script>
+<script>
+let editCooldown = false;
 
+document.addEventListener('keydown', function(e) {
+  // Prevent rapid toggles
+  if (editCooldown) return;
+
+  // Toggle edit mode using CTRL + ALT + SPACE
+  if (e.ctrlKey && e.altKey && e.code === 'Space') {
+    const body = document.body;
+    const isEditable = body.getAttribute('contenteditable') === 'true';
+
+    // Toggle editable state
+    body.setAttribute('contenteditable', isEditable ? 'false' : 'true');
+
+    alert("Edit mode: " + (!isEditable));
+
+    // cooldown prevents instant double-trigger
+    editCooldown = true;
+    setTimeout(() => editCooldown = false, 500); // 0.5 seconds
+  }
+});
+</script>
 
 
 </body></html>
