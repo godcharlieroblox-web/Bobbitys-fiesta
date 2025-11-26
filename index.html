@@ -29,7 +29,34 @@ body {
 }
 </style>
 </head>
-<body contenteditable="true">
+<script>
+document.addEventListener('keydown', function(e) {
+  // Toggle edit mode using Ctrl + Alt + Space
+  if (e.ctrlKey && e.altKey && e.code === 'Space') {
+    const body = document.body;
+    const isEditable = body.getAttribute('contenteditable') === 'true';
+
+    // Toggle contenteditable on the entire page
+    body.setAttribute('contenteditable', isEditable ? 'false' : 'true');
+
+    // Optional feedback
+    console.log("Edit mode =", !isEditable);
+    alert("Edit mode: " + (!isEditable));
+  }
+});
+</script>
+<script>
+document.addEventListener('keydown', function(e) {
+  // Toggle editing with CTRL + ALT + SPACE
+  if (e.ctrlKey && e.altKey && e.code === 'Space') {
+    const body = document.body;
+    const isEditable = body.getAttribute('contenteditable') === 'true';
+    body.setAttribute('contenteditable', isEditable ? 'false' : 'true');
+    alert("Edit mode: " + (!isEditable));
+  }
+});
+</script>
+<body>
 <div class="pixel-border"></div>
 <div class="header">
   <h1><span style="font-family: Arial, Helvetica, sans-serif; font-size: 19px; font-weight: 400; text-align: start;">Lá fiestá dé Bobbiteré</span></h1>
