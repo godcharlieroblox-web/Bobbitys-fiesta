@@ -29,7 +29,7 @@ body {
 }
 </style>
 </head>
-<body contenteditable="true">
+<body>
 <div class="pixel-border"></div>
 <div class="header">
   <h1><span style="font-family: Arial, Helvetica, sans-serif; font-size: 19px; font-weight: 400; text-align: start;">Lá fiestá dé Bobbiteré</span></h1>
@@ -142,7 +142,26 @@ function downloadPage() {
   a.click();
 }
 </script>
+<script>
+let editCooldown = false;
 
+document.addEventListener('keydown', function(e) {
+  if (editCooldown) return;
+
+  if (e.ctrlKey && e.altKey && e.code === 'Space') {
+    const body = document.body;
+    const isEditable = body.getAttribute('contenteditable') === 'true';
+
+    body.setAttribute('contenteditable', isEditable ? 'false' : 'true');
+
+    alert("Edit mode: " + (!isEditable));
+
+    editCooldown = true;
+    setTimeout(() => editCooldown = false, 500); // 0.5 seconds
+  }
+});
+</script>
+</script>
 
 
 </body></html>
