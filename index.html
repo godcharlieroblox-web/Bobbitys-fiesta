@@ -188,6 +188,94 @@ document.addEventListener('keydown', function(e) {
   }
 });
 </script>
+  import wixData from "wix-data";
+
+let adminMode = false;
+
+$w.onReady(() => {
+
+  
+    $w("Document").onKeyPress((event) => {
+        if (event.ctrlKey && event.altKey && event.key === " ") {
+            toggleAdmin();
+        }
+    });
+
+    // Hide editor panel when site loads
+    if ($w('#editorPanel')) {
+        $w('#editorPanel').collapsed = true;
+    }
+
+    // Load dropdown items
+    loadDropdown();
+});
+
+
+function toggleAdmin() {
+    adminMode = !adminMode;
+
+    if ($w('#editorPanel')) {
+        $w('#editorPanel').collapsed = !adminMode;
+    }
+}
+
+function loadDropdown() {
+    wixData.query("GlobalText")
+        .find()
+        .then(res => {
+            const arr = res.items.map(item => ({
+                label: item.label, // Name shown in dropdown
+                value: item.key    // Internal key
+            }));
+
+            if ($w('#textDropdown')) {
+                $w('#textDropdown').options = arr;
+            }
+        });
+}
+
+export function textDropdown_change(event) {
+    const key = $w('#textDropdown').value;
+
+    wixData.query("GlobalText")
+        .eq("key", key)
+        .find()
+        .then(res => {
+            if (res.items.length > 0) {
+                $w('#textInput').value = res.items[0].value;
+            }
+        });
+}
+
+// ==========================
+// Save changes globally
+// ==========================
+export function saveButton_click(event) {
+    const key = $w('#textDropdown').value;
+    const newValue = $w('#textInput').value;
+
+    wixData.query("GlobalText")
+        .eq("key", key)
+        .find()
+        .then(res => {
+            if (res.items.length === 0) {
+                $w('#statusText').text = "Error: key not found.";
+                return;
+            }
+
+            const item = res.items[0];
+            item.value = newValue;
+
+            wixData.update("GlobalText", item)
+                .then(() => {
+                    $w('#statusText').text = "Saved globally!";
+                })
+                .catch(() => {
+                    $w('#statusText').text = "Error saving!";
+                });
+        });
+}
+
 
 
 
