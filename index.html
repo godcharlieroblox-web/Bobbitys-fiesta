@@ -162,6 +162,16 @@ document.addEventListener('keydown', function(e) {
 });
 </script>
 </script>
+<div id="videoGalleryPanel">
+  <h2>Video Gallery</h2>
 
+  <button id="uploadVideoBtn" style="display:none;" onclick="document.getElementById('videoInput').click()">
+    Upload Video
+  </button>
+
+  <input type="file" id="videoInput" accept="video/mp4" style="display:none;" onchange="addVideo(event)">
+
+  <div id="videoGallery"></div>
+</div>
 
 </body></html>
