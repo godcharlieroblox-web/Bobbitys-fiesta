@@ -1,6 +1,7 @@
 <html lang="en"><head>
 <meta charset="UTF-8">
 <title>Bobbity's Fiesta Food Truck</title>
+<button onclick="toggleVideoPanel()">Video Gallery</button>
 <style>
 body {
   font-family: Arial, sans-serif;
@@ -26,6 +27,47 @@ body {
 }
 .stall {
   margin-bottom:30px;
+}
+<style>
+#videoGalleryPanel {
+  position: fixed;
+  top: 0;
+  right: -400px;
+  width: 400px;
+  height: 100vh;
+  background: #ffffff;
+  box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+  padding: 20px;
+  overflow-y: auto;
+  transition: right 0.4s;
+  z-index: 9999;
+}
+
+#videoGalleryPanel.open {
+  right: 0;
+}
+
+.videoBox {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.deleteVideoBtn {
+  position:absolute;
+  top:5px;
+  right:5px;
+  background:#ff4444;
+  border:none;
+  padding:5px 8px;
+  color:white;
+  font-size:12px;
+  border-radius:5px;
+  cursor:pointer;
+  display:none;
+}
+
+.edit-mode .deleteVideoBtn {
+  display:block !important;
 }
 </style>
 </head>
@@ -162,6 +204,7 @@ document.addEventListener('keydown', function(e) {
 });
 </script>
 </script>
+
 <div id="videoGalleryPanel">
   <h2>Video Gallery</h2>
 
@@ -173,5 +216,81 @@ document.addEventListener('keydown', function(e) {
 
   <div id="videoGallery"></div>
 </div>
+<script>
+let editMode = false;
 
+document.addEventListener("keydown", e => {
+  if (e.ctrlKey && e.altKey && e.code === "Space") {
+    editMode = !editMode;
+    document.body.classList.toggle("edit-mode", editMode);
+    document.getElementById('uploadVideoBtn').style.display = editMode ? "block" : "none";
+  }
+});
+
+function toggleVideoPanel() {
+  document.getElementById("videoGalleryPanel").classList.toggle("open");
+}
+
+// Add uploaded video to gallery
+function addVideo(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const url = URL.createObjectURL(file);
+  const gallery = document.getElementById("videoGallery");
+
+  const box = document.createElement("div");
+  box.className = "videoBox";
+
+  const del = document.createElement("button");
+  del.className = "deleteVideoBtn";
+  del.innerText = "X";
+  del.onclick = () => { box.remove(); saveGallery(); };
+
+  const vid = document.createElement("video");
+  vid.src = url;
+  vid.controls = true;
+  vid.style.width = "100%";
+
+  box.appendChild(del);
+  box.appendChild(vid);
+  gallery.appendChild(box);
+
+  saveGallery();
+}
+
+function saveGallery() {
+  const videos = [];
+  document.querySelectorAll(".videoBox video").forEach(v => {
+    videos.push(v.src);
+  });
+  localStorage.setItem("bobbitereVideos", JSON.stringify(videos));
+}
+window.addEventListener("load", () => {
+  const saved = localStorage.getItem("bobbitereVideos");
+  if (!saved) return;
+
+  const urls = JSON.parse(saved);
+  const gallery = document.getElementById("videoGallery");
+
+  urls.forEach(url => {
+    const box = document.createElement("div");
+    box.className = "videoBox";
+
+    const del = document.createElement("button");
+    del.className = "deleteVideoBtn";
+    del.innerText = "X";
+    del.onclick = () => { box.remove(); saveGallery(); };
+
+    const vid = document.createElement("video");
+    vid.src = url;
+    vid.controls = true;
+    vid.style.width = "100%";
+
+    box.appendChild(del);
+    box.appendChild(vid);
+    gallery.appendChild(box);
+  });
+});
+</script>
 </body></html>
